@@ -1,0 +1,16 @@
+clone:
+  skip_verify: true
+build:
+  bundle:
+    image: golang
+    environment:
+      - GOOS=linux
+      - GOARCH=amd64
+      - CGO_ENABLED=0
+    commands:
+      - go get
+      - go test -cover ./...
+      - go tool vet -v -all .
+      - go build -a -ldflags "-s -X main.buildnumber=$$BUILD_NUMBER  -X main.githash=$$COMMIT -X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'`"
+    when:
+      branch: stable
